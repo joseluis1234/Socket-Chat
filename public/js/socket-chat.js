@@ -1,6 +1,6 @@
 let socket = io();
 
-let params = new URLSearchParams(window.location.search);
+var params = new URLSearchParams(window.location.search);
 
 if(!params.has('nombre') || !params.has('sala')) {
     window.location = 'index.html';
@@ -16,7 +16,7 @@ socket.on('connect', function() {
     console.log('Conectado al servidor');
 
     socket.emit('entrarChat', usuario,(resp)=>{
-        console.log('Usuarios Conectados',resp);
+        renderizarUsuarios(resp);
     });
 });
 
@@ -27,26 +27,18 @@ socket.on('disconnect', function() {
 
 });
 
-
-// Enviar información
-// socket.emit('crearMensaje', {
-//     usuario: 'Fernando',
-//     mensaje: 'Hola Mundo'
-// }, function(resp) {
-//     console.log('respuesta server: ', resp);
-// });
-
 // Escuchar información
 socket.on('crearMensaje', function(mensaje) {
 
-    console.log('Servidor:', mensaje);
+    renderizarMensajes(mensaje,false);
+    scrollBottom();
 
 });
 
 //Escuhar cambios de usuarios cuando entra y sale
 socket.on('listaPersonas', function(personas) {
 
-    console.log(personas);
+    renderizarUsuarios(personas);
 
 });
 
